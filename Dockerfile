@@ -1,5 +1,5 @@
-# Use official PHP 8.2 FPM image
-FROM php:8.2-fpm
+# Use official PHP 8.2 image
+FROM php:8.2-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
+    && docker-php-ext-install pdo pdo_pgsql mbstring bcmath gd
 
 # Set working directory
 WORKDIR /var/www/html
@@ -23,24 +23,12 @@ COPY . .
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer install --no-interaction --optimize-autoloader
 
-# Ensure Laravel storage and bootstrap directories exist and are writable
-RUN mkdir -p storage/framework/views \
-    storage/framework/cache/data \
-    storage/framework/sessions \
-    storage/framework/testing \
-    bootstrap/cache && \
-    chmod -R 777 storage bootstrap/cache
+# Create required Laravel directories
+RUN mkdir -p storage/framework/{cache,data,sessions,views} bootstrap/cache \
+    && chmod -R 777 storage bootstrap/cache
 
-# Clear and cache config/routes at build time
-RUN php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    php artisan config:cache && \
-    php artisan route:cache
-
-# Expose port 8080 (Render forwards traffic here)
+# Expose Render port
 EXPOSE 8080
 
-# Start PHP-FPM (Render will serve via port 8080)
-CMD ["php-fpm"]
+# Start Laravel AFTER Render injects env vars
+CMD php artisan serve --host=0.0.0.0 --port=8080
