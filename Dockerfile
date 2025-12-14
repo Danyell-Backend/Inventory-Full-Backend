@@ -31,13 +31,14 @@ RUN mkdir -p storage/framework/views \
     bootstrap/cache && \
     chmod -R 777 storage bootstrap/cache
 
-# Expose port (Render forwards traffic)
+# Expose port 8080 (Render forwards traffic here)
 EXPOSE 8080
 
-# Entrypoint: clear caches at runtime, then start PHP-FPM
+# Entrypoint: clear caches at runtime, then start Laravel's built-in server
 CMD sh -c "\
     php artisan config:clear && \
     php artisan cache:clear && \
     php artisan route:clear && \
-    php-fpm \
+    php artisan view:clear && \
+    php artisan serve --host=0.0.0.0 --port=8080 \
 "
