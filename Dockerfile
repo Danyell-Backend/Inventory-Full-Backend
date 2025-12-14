@@ -21,12 +21,10 @@ COPY . .
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
-
-# Install Laravel dependencies
 RUN composer install --no-interaction --optimize-autoloader
 
 # Expose port
 EXPOSE 8000
 
-# Run migrations then start server
-CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
+# Run migrations, seeders, clear cache, then start Laravel server
+CMD sh -c "php artisan migrate --force && php artisan db:seed --force && php artisan config:clear && php artisan cache:clear && php artisan route:clear && php artisan serve --host=0.0.0.0 --port=8000"
