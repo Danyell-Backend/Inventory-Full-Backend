@@ -23,6 +23,14 @@ COPY . .
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 RUN composer install --no-interaction --optimize-autoloader
 
+# Ensure Laravel storage and bootstrap directories exist and are writable
+RUN mkdir -p storage/framework/views \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/framework/testing \
+    bootstrap/cache && \
+    chmod -R 777 storage bootstrap/cache
+
 # Expose port (Render forwards traffic)
 EXPOSE 8080
 
@@ -31,6 +39,5 @@ CMD sh -c "\
     php artisan config:clear && \
     php artisan cache:clear && \
     php artisan route:clear && \
-    php artisan view:clear && \
     php-fpm \
 "
