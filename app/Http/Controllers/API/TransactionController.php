@@ -71,7 +71,7 @@ class TransactionController extends Controller
                 ], 404);
             }
             
-            // Check if item is availabl
+            // Check if item is available
             if ($item->status !== 'available') {
                 return response()->json([
                     'status' => false,

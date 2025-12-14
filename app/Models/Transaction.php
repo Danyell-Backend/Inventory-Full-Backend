@@ -25,7 +25,7 @@ class Transaction extends Model
         'due_date' => 'datetime',
         'return_date' => 'datetime',
     ];
-
+        
     /**
      * Get the user that owns the transaction.
      */
