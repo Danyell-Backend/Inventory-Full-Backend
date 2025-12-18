@@ -93,7 +93,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
 
-        // Removed: Illuminate\View\ViewServiceProvider::class,
+        Illuminate\View\ViewServiceProvider::class,
 
         // Application Service Providers
         App\Providers\AppServiceProvider::class,
