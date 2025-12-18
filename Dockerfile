@@ -27,8 +27,8 @@ RUN composer install --no-interaction --optimize-autoloader
 RUN mkdir -p storage/framework/{cache,data,sessions,views} bootstrap/cache \
     && chmod -R 777 storage bootstrap/cache
 
+# Clear config & route caches at runtime
+CMD php artisan config:clear && php artisan route:clear && php artisan serve --host=0.0.0.0 --port=8080
+
 # Expose Render port
 EXPOSE 8080
-
-# Start Laravel AFTER Render injects env vars
-CMD php artisan serve --host=0.0.0.0 --port=8080
