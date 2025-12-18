@@ -1,4 +1,4 @@
-# Use official PHP 8.2 image
+# Use official PHP 8.2 CLI image
 FROM php:8.2-cli
 
 # Install system dependencies
@@ -30,5 +30,5 @@ RUN mkdir -p storage/framework/{cache,data,sessions,views} bootstrap/cache \
 # Expose Render port
 EXPOSE 8080
 
-# Start PHP built-in server on Render port
-CMD sh -c "php artisan optimize:clear || true; php -S 0.0.0.0:${PORT:-8080} -t public"
+# Run migrations, clear caches, and start PHP built-in server
+CMD sh -c "php artisan migrate --force && php artisan optimize:clear || true; php -S 0.0.0.0:${PORT:-8080} -t public"
