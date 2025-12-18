@@ -31,4 +31,4 @@ RUN mkdir -p storage/framework/{cache,data,sessions,views} bootstrap/cache \
 EXPOSE 8080
 
 # Start PHP built-in server on Render port
-CMD php -S 0.0.0.0:${PORT:-8080} -t public
+CMD sh -c "php artisan optimize:clear || true; php -S 0.0.0.0:${PORT:-8080} -t public"

@@ -10,3 +10,11 @@ Route::get('/', function () {
         'status' => 'running'
     ]);
 });
+
+// Fallback for undefined routes - return 404
+Route::fallback(function () {
+    return response()->json([
+        'status' => false,
+        'message' => 'Route not found'
+    ], 404);
+});
